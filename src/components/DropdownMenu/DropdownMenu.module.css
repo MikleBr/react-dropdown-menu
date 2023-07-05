@@ -1,0 +1,11 @@
+.plate {
+  position: absolute;
+  background-color: #ffffff;
+  max-width: 100%;
+}
+
+.plate-transition-end {
+  opacity: 0;
+  scale: 0;
+  pointer-events: none;
+}
