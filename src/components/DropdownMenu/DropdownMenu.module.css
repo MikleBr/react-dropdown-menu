@@ -1,7 +1,11 @@
 .plate {
+  transition: all ease;
   position: absolute;
   background-color: #ffffff;
   max-width: 100%;
+  -webkit-box-shadow: 0px -1px 12px 4px rgba(34, 60, 80, 0.2);
+  -moz-box-shadow: 0px -1px 12px 4px rgba(34, 60, 80, 0.2);
+  box-shadow: 0px -1px 12px 4px rgba(34, 60, 80, 0.2);
 }
 
 .plate-transition-end {

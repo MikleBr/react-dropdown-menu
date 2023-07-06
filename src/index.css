@@ -5,3 +5,7 @@
 body {
   @apply bg-[#F0F0F0];
 }
+
+code {
+  @apply text-[#eb5757] bg-[rgba(135,131,120,0.15)] px-1 font-medium rounded-md;
+}

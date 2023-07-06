@@ -23,7 +23,11 @@ export default function Transition({
 
   useEffect(() => {
     if (mount) {
-      setTransition(false);
+      //! Актуально для React 18
+      // setTimeout сделан для случая когда
+      // рендер компонента вызван дискретным вводом (например: onMouseEnter, onscroll и т.д.)
+      // https://github.com/reactwg/react-18/discussions/128
+      setTimeout(() => setTransition(false), 10);
     } else {
       timeoutID.current = setTimeout(() => {
         setTransition(true);

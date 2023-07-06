@@ -15,7 +15,7 @@ type DropdownMenuProps = React.HTMLAttributes<HTMLDivElement> & {
   open: boolean;
   triggerRef: React.RefObject<HTMLElement>;
   transitionDuration?: number;
-  offsetTop?: number;
+  offset?: number;
   defaultPosition?: DropdownMenuDefaultPosition;
   onClose?: () => void;
 };
@@ -24,7 +24,7 @@ export default function DropdownMenu({
   open,
   triggerRef,
   transitionDuration = 150,
-  offsetTop = 0,
+  offset = 0,
   defaultPosition = {
     horizontal: 'right',
     vertical: 'bottom',
@@ -35,7 +35,7 @@ export default function DropdownMenu({
   style,
   ...props
 }: DropdownMenuProps) {
-  const plateRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const [transition, setTransition] = useState(false);
   const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(
@@ -52,9 +52,9 @@ export default function DropdownMenu({
 
   useEffect(() => {
     const handleClick = ({ clientX, clientY }: MouseEvent) => {
-      if (plateRef.current !== null) {
+      if (menuRef.current !== null) {
         const { top, left, width, height } =
-          plateRef.current.getBoundingClientRect();
+          menuRef.current.getBoundingClientRect();
 
         const isEnterPlate =
           clientX > left &&
@@ -80,28 +80,28 @@ export default function DropdownMenu({
 
     if (transition) {
       const animate = () => {
-        if (triggerRef.current !== null && plateRef.current !== null) {
+        if (triggerRef.current !== null && menuRef.current !== null) {
           const { bottom, left, right, top } =
             triggerRef.current.getBoundingClientRect();
 
           let horizontalPosition = defaultPosition.horizontal;
           let verticalPosition = defaultPosition.vertical;
 
-          if (right < plateRef.current.clientWidth) {
+          if (right < menuRef.current.clientWidth) {
             horizontalPosition = 'left';
           } else if (
             document.body.clientWidth - left <
-            plateRef.current.clientWidth
+            menuRef.current.clientWidth
           ) {
             horizontalPosition = 'right';
           } else {
             horizontalPosition = defaultPosition.horizontal;
           }
 
-          if (top - offsetTop - plateRef.current.clientHeight < 0) {
+          if (top - offset - menuRef.current.clientHeight < 0) {
             verticalPosition = 'bottom';
           } else if (
-            bottom + offsetTop + plateRef.current.clientHeight >
+            bottom + offset + menuRef.current.clientHeight >
             window.innerHeight
           ) {
             verticalPosition = 'top';
@@ -113,35 +113,33 @@ export default function DropdownMenu({
           let transformOriginHorizontal = 0;
 
           if (verticalPosition === 'bottom') {
-            plateRef.current.style.top = `${
-              window.scrollY + bottom + offsetTop
-            }px`;
-            plateRef.current.style.bottom = 'auto';
+            menuRef.current.style.top = `${window.scrollY + bottom + offset}px`;
+            menuRef.current.style.bottom = 'auto';
             transformOriginVertical = 0;
           }
           if (verticalPosition === 'top') {
-            plateRef.current.style.top = `${
-              window.scrollY + top - plateRef.current.clientHeight - offsetTop
+            menuRef.current.style.top = `${
+              window.scrollY + top - menuRef.current.clientHeight - offset
             }px`;
-            plateRef.current.style.bottom = 'auto';
+            menuRef.current.style.bottom = 'auto';
             transformOriginVertical = 100;
           }
 
           if (horizontalPosition === 'left') {
-            plateRef.current.style.left = `${left}px`;
-            plateRef.current.style.right = 'auto';
+            menuRef.current.style.left = `${left}px`;
+            menuRef.current.style.right = 'auto';
             transformOriginHorizontal = 0;
           }
 
           if (horizontalPosition === 'right') {
-            plateRef.current.style.left = 'auto';
-            plateRef.current.style.right = `${
+            menuRef.current.style.left = 'auto';
+            menuRef.current.style.right = `${
               window.document.body.clientWidth - right
             }px`;
             transformOriginHorizontal = 100;
           }
 
-          plateRef.current.style.transformOrigin = `${transformOriginHorizontal}% ${transformOriginVertical}%`;
+          menuRef.current.style.transformOrigin = `${transformOriginHorizontal}% ${transformOriginVertical}%`;
         }
 
         animationFrame = requestAnimationFrame(animate);
@@ -155,7 +153,7 @@ export default function DropdownMenu({
         cancelAnimationFrame(animationFrame);
       }
     };
-  }, [transition, defaultPosition, offsetTop, triggerRef]);
+  }, [transition, defaultPosition, offset, triggerRef]);
 
   const plate = (
     <Transition
@@ -165,7 +163,7 @@ export default function DropdownMenu({
       onTransitionUnmount={() => setTransition(false)}
     >
       <div
-        ref={plateRef}
+        ref={menuRef}
         style={{ transitionDuration: `${transitionDuration}ms`, ...style }}
         className={`${className} ${styles.plate} ${
           transition ? '' : styles['plate-transition-end']

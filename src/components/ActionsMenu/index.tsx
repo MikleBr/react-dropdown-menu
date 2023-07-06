@@ -6,11 +6,18 @@ import { ActionsMenuContext } from './context';
 type Props = React.PropsWithChildren & {
   className?: string;
   button: React.ReactNode;
+  offset?: number;
+  defaultPosition?: {
+    horizontal: 'right' | 'left';
+    vertical: 'bottom' | 'top';
+  };
 };
 
 export default function ActionsMenu({
   children,
   className = '',
+  defaultPosition,
+  offset = 10,
   button,
 }: Props) {
   const buttonRef = useRef(null);
@@ -37,8 +44,8 @@ export default function ActionsMenu({
       <DropdownMenu
         className="w-[260px] overflow-hidden rounded-md"
         open={open}
-        defaultPosition={{ vertical: 'bottom', horizontal: 'right' }}
-        offsetTop={10}
+        defaultPosition={defaultPosition}
+        offset={10}
         onClose={() => setOpen(false)}
         triggerRef={buttonRef}
       >
