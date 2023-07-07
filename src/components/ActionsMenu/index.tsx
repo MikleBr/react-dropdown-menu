@@ -8,6 +8,7 @@ type Props = React.PropsWithChildren & {
   className?: string;
   button: React.ReactNode;
   offset?: number;
+  closeOnExitViewport?: boolean;
   defaultPosition?: {
     horizontal: 'right' | 'left';
     vertical: 'bottom' | 'top';
@@ -18,12 +19,21 @@ export default function ActionsMenu({
   children,
   className = '',
   defaultPosition,
+  closeOnExitViewport = false,
   offset = 10,
   button,
 }: Props) {
   const buttonRef = useRef(null);
 
   const [open, setOpen] = useState(false);
+
+  useIntersectionObserver(buttonRef, {
+    onNonIntersecting: closeOnExitViewport
+      ? () => {
+          setOpen(false);
+        }
+      : undefined,
+  });
 
   const value = useMemo(
     () => ({
