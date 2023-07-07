@@ -1,4 +1,4 @@
-import { useRef, useCallback, useMemo, useState } from 'react';
+import { useRef, useMemo, useState } from 'react';
 import DropdownMenu from '../DropdownMenu';
 import Item from './Item';
 import { ActionsMenuContext } from './context';
