@@ -1,7 +1,8 @@
-import { useRef, useMemo, useState } from 'react';
+import { useRef, useCallback, useMemo, useState } from 'react';
 import DropdownMenu from '../DropdownMenu';
 import Item from './Item';
 import { ActionsMenuContext } from './context';
+import useIntersectionObserver from '../../hooks/useIntersectionObserver';
 
 type Props = React.PropsWithChildren & {
   className?: string;
@@ -45,7 +46,7 @@ export default function ActionsMenu({
         className="w-[260px] overflow-hidden rounded-md"
         open={open}
         defaultPosition={defaultPosition}
-        offset={10}
+        offset={offset}
         onClose={() => setOpen(false)}
         triggerRef={buttonRef}
       >

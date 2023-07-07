@@ -4,9 +4,10 @@ import Main from './blocks/Main.js';
 
 function App() {
   return (
-    <div className="max-w-[800px] h-[200vh] pt-40 mx-auto">
+    <div className="max-w-[800px] h-[200vh] pt-20 mx-auto">
+      <h1 className="mb-10 text-4xl font-black">Крутое тестовое задание</h1>
       <Main />
-      <h2 className="mb-4 text-3xl font-bold">
+      <h2 className="mt-8 mb-4 text-3xl font-bold">
         Компонент <code>{`<ActionMenu />`}</code>
       </h2>
       <p className="mt-1 mb-2 text-lg">

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useId, useState } from 'react';
 import ReactDOM from 'react-dom';
 
 import Transition from '../Transition';
@@ -21,7 +21,7 @@ type DropdownMenuProps = React.HTMLAttributes<HTMLDivElement> & {
 };
 
 export default function DropdownMenu({
-  open,
+  open: externalOpen,
   triggerRef,
   transitionDuration = 150,
   offset = 0,
@@ -35,20 +35,54 @@ export default function DropdownMenu({
   style,
   ...props
 }: DropdownMenuProps) {
+  const [open, setOpen] = useState(false);
+  const menuId = useId();
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const isComponentMount = open && externalOpen;
 
   const [transition, setTransition] = useState(false);
   const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(
     null
   );
 
+  useIntersectionObserver(triggerRef, {
+    onNonIntersecting: () => {
+      setOpen(false);
+    },
+    onIntersecting: () => {
+      setOpen(true);
+    },
+  });
+
   useEffect(() => {
     setPortalContainer(document.body);
   }, []);
 
-  useIntersectionObserver(triggerRef, {
-    onNonIntersecting: onClose,
-  });
+  useEffect(() => {
+    const checkMenuOpen = (event: CustomEvent<OpenMenuEvent>) => {
+      if (event.detail.id !== menuId) {
+        onClose?.();
+      }
+    };
+
+    window.addEventListener('openmenu', checkMenuOpen);
+
+    return () => {
+      window.removeEventListener('openmenu', checkMenuOpen);
+    };
+  }, [menuId, onClose]);
+
+  useEffect(() => {
+    if (isComponentMount) {
+      const event = new CustomEvent('openmenu', {
+        detail: {
+          id: menuId,
+        },
+      });
+      window.dispatchEvent(event);
+    }
+  }, [isComponentMount, menuId]);
 
   useEffect(() => {
     const handleClick = ({ clientX, clientY }: MouseEvent) => {
@@ -158,7 +192,7 @@ export default function DropdownMenu({
   const plate = (
     <Transition
       duration={transitionDuration}
-      mount={open}
+      mount={isComponentMount}
       onTransitionMount={() => setTransition(true)}
       onTransitionUnmount={() => setTransition(false)}
     >
