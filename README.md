@@ -1,4 +1,4 @@
-# React Dropdownmenu
+# React DropdownMenu
 
 ![React](https://img.shields.io/badge/frontend-react-61DBFB?style=flat&logo=react)
 ![TypeScript](https://img.shields.io/badge/frontend-ts-blue?style=flat&logo=typescript)
