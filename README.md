@@ -19,4 +19,4 @@
 - `lint` - run the linter
 - `build` - build the project files for distribution
 - `dev` - run the local development server
-- `vite preview` - run the local production server for preview
+- `preview` - run the local production server for preview
