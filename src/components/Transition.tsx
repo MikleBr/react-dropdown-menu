@@ -9,6 +9,15 @@ type TransitionProps = React.PropsWithChildren & {
   onTransitionUnmount?: () => void;
 };
 
+function queueMacrotask(callback: () => void) {
+  const messageChannel = new MessageChannel();
+  messageChannel.port2.onmessage = () => {
+    callback();
+    messageChannel.port2.onmessage = null;
+  };
+  messageChannel.port1.postMessage(null);
+}
+
 export default function Transition({
   children,
   mount = false,
@@ -25,9 +34,10 @@ export default function Transition({
     if (mount) {
       //! Актуально для React 18
       // setTimeout сделан для случая когда
-      // рендер компонента вызван дискретным вводом (например: onMouseEnter, onscroll и т.д.)
+      // рендер компонента вызван недискретным вводом (например: onMouseEnter, onScroll и т.д.)
+      // эффект и рендер вызываются синхронно и анимация не работает
       // https://github.com/reactwg/react-18/discussions/128
-      setTimeout(() => setTransition(false), 10);
+      queueMacrotask(() => setTransition(false));
     } else {
       timeoutID.current = setTimeout(() => {
         setTransition(true);
